@@ -123,7 +123,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/03/13/%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/4948815D730674F9F0AF31A3BE2AAA78.jpg">
 <meta property="og:image" content="http://yoursite.com/2020/03/13/%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/1C0834AADBE948F933A13CF6D3CDB397.jpg">
 <meta property="article:published_time" content="2020-03-13T10:41:41.000Z">
-<meta property="article:modified_time" content="2020-03-13T10:52:58.500Z">
+<meta property="article:modified_time" content="2020-03-13T11:12:00.944Z">
 <meta property="article:author" content="Pzbhellp">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="算法导论">
@@ -419,7 +419,9 @@
       
 
       
-        <h1 id="单源最短路径"><a href="#单源最短路径" class="headerlink" title="单源最短路径"></a>单源最短路径</h1><blockquote>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h1 id="单源最短路径"><a href="#单源最短路径" class="headerlink" title="单源最短路径"></a>单源最短路径</h1><blockquote>
 <p>阅读《算法导论》里的一些总结，这里抛开了繁杂的理论知识，希望能用通俗易懂的方法来和大家一起讨论算法。</p>
 </blockquote>
 <p>从 中国的 最北方到拉萨 ，我们怎样才是走最短的路程？</p>
@@ -434,12 +436,12 @@
 <p>例如：<br><img src="556940E2C3AB2F9A383638040DB57DD8.jpg" alt="IMAGE"><br>红色箭头的就是从起始节点到终止节点的路径，每个节点中的红色数字就是路径长度。</p>
 <p>呐，这里我们必须了解的又一个概念，叫做 <strong>「松弛(relaxation)」</strong></p>
 <h3 id="松弛"><a href="#松弛" class="headerlink" title="松弛"></a>松弛</h3><p>将从节点s到节点u之间的最短路径距离加上节点u与v之间的边权重，与节点s到v的最短路径估计比较，如果如果前者较小，则更新节点s到v的最短路径估计。</p>
-<h4 id="三角不等式"><a href="#三角不等式" class="headerlink" title="三角不等式"></a>三角不等式</h4><p>对于任何边 $(u,v)∈E$ ,有 $w(s,v)&lt;=w(s,u)+w(u,v)$</p>
+<h4 id="三角不等式"><a href="#三角不等式" class="headerlink" title="三角不等式"></a>三角不等式</h4><p>对于任何边 \((u,v)∈E\) ,有 \(w(s,v)&lt;=w(s,u)+w(u,v)\)</p>
 <p>文字让人迷惑，上 demo ：<br><img src="C902EBD8C2B05D06E13041C329C7E040.jpg" alt="IMAGE"></p>
 <p>可以这样理解，我们从 A-&gt;B 需要10天时间，但是我们从 A-&gt;C = 5天，从 C-&gt;B = 3天，这样我们就可以认为 从 A-&gt;B = 8天。让自己 Relax 一下喽~</p>
 <h2 id="Bellman-Ford"><a href="#Bellman-Ford" class="headerlink" title="Bellman-Ford"></a>Bellman-Ford</h2><p>ok，理解了一些基础概念，我们看一看算法「Bellman-Ford」是怎么实现的~</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BELLMAN_FORD(G,w,s)</span><br><span class="line"></span><br><span class="line">INITIALIZE_SINGLE-SOURCE(G,s) &#x2F;&#x2F;初始化</span><br><span class="line">for i&#x3D;1 to |G.V|-1  &#x2F;&#x2F;循环V-1次</span><br><span class="line">    for each edge(u,v)∈G.E &#x2F;&#x2F;对G中的每条边进行RELAX</span><br><span class="line">        RELAX(u,v,w)</span><br><span class="line">    for each edge(u,v)∈G.E  &#x2F;&#x2F;检查途中是否存在权重为负的环</span><br><span class="line">        if v.d&gt;u.d+w(u.v)</span><br><span class="line">            return FALSE</span><br><span class="line">return TRUE</span><br></pre></td></tr></table></figure>
-<p>这里为什么要检测，权重为负的环呢？  因为最短呀，如果有为负的环， 负无穷 $-\infty$ 了解一下~</p>
+<p>这里为什么要检测，权重为负的环呢？  因为最短呀，如果有为负的环， 负无穷 \(-\infty\) 了解一下~</p>
 <p><img src="FD1CB986C8A44EAB760104D38A3C6CB1.jpg" alt="IMAGE"><br>带入上面的松弛，我们最终得到的是这样的路径：<br><img src="EB1802FD443E164A37E871DE7CDF7214.jpg" alt="IMAGE"></p>
 <p>如果出现了权重为负的环呢？<br><img src="6E56A51C20BA7B4D2414C3254505C128.jpg" alt="IMAGE"></p>
 <p>注意看最后的 <strong>t -&gt; z -&gt; x</strong> 环，一圈的权和为-1 ，意味着我们只要在这个环里无限循环，是不可能找到最小的解的<br><img src="36F8041A9DF402D4143667E247F391E3.jpg" alt="IMAGE"></p>
@@ -478,7 +480,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DIJKSTRA(G,w,s)</span><br><span class="line"></span><br><span class="line">INITIALIZE_SINGLE-SOURCE(G,s) &#x2F;&#x2F;初始化</span><br><span class="line">S&#x3D;∅</span><br><span class="line">Q&#x3D;G.V   &#x2F;&#x2F;图中全部节点进入队列</span><br><span class="line">while Q≠∅   &#x2F;&#x2F;最小优先队列不为空</span><br><span class="line">    u&#x3D;EXTRACT-MIN(Q)    &#x2F;&#x2F;每一次选择从队列中 pop 出来</span><br><span class="line">    S&#x3D;S∪&#123;u&#125; &#x2F;&#x2F;全部处理完成后 S &#x3D; G.V</span><br><span class="line">    for each vertex v∈G.Adj[u]</span><br><span class="line">        RELAX(u,v,w)    &#x2F;&#x2F;对每个节点进行 relax</span><br></pre></td></tr></table></figure>
 
 <p>每一次 <code>u=EXTRACT-MIN(Q)</code> 出来的节点，用灰色节点表示，加入 S 的则用黑色节点表示， 在队列中的则用白色节点表示。</p>
-<p><img src="93705C58A4070CDAEC69E8FC32548D75.jpg" alt="IMAGE"><br>这里队列中 pop 出节点 s ，relax 后，队列中的 t、y 节点变为10 、 5 。<br>则队列中存在 {t(10),y(5),x($\infty$),z($\infty$)} ,pop 出的节点为 y。<br><img src="12F9E3E6B40924884EF2F7DE3AA55C7D.jpg" alt="IMAGE"></p>
+<p><img src="93705C58A4070CDAEC69E8FC32548D75.jpg" alt="IMAGE"><br>这里队列中 pop 出节点 s ，relax 后，队列中的 t、y 节点变为10 、 5 。<br>则队列中存在 {t(10),y(5),x(\(\infty\)),z(\(\infty\))} ,pop 出的节点为 y。<br><img src="12F9E3E6B40924884EF2F7DE3AA55C7D.jpg" alt="IMAGE"></p>
 <p>同上，节点 y 进入 S ，更改队列中节点的数值。<br>relex 之后，队列中的节点变为{t(8),x(14),z(7)},pop 下一次 pop 出节点 z。</p>
 <p><img src="8EF0E7939130CBDF9FD64A14DD461D6D.jpg" alt="IMAGE"></p>
 <p>同上，节点 z 进入 S ，更改队列中节点的数值。<br>relex 之后，队列中的节点变为{t(8),x(13)},pop 下一次 pop 出节点 z。</p>
@@ -498,14 +500,13 @@
 </ul>
 </li>
 <li>时间复杂度依赖最小优先队列的实现<ul>
-<li>hash ： $O(V²+E) = O(V²)$</li>
-<li>二叉堆：稀疏图情况, $O((V+E)lgV)$ ,都可从源点到达 $O(ElgV)$</li>
-<li>斐波那契堆： $O(VlgV+E)$</li>
+<li>hash ： \(O(V²+E) = O(V²)\)</li>
+<li>二叉堆：稀疏图情况, \(O((V+E)lgV)\) ,都可从源点到达 \(O(ElgV)\)</li>
+<li>斐波那契堆： \(O(VlgV+E)\)</li>
 </ul>
 </li>
 </ul>
 <h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>后续会整理一些真正的代码实现出来吧  等更新吧</p>
-<!-- markdownlint-disable MD041 MD002--> # 防止 markdownlint 报错
 
       
     </div>
