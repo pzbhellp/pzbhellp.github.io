@@ -1,6 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>单源最短路径</title>
+    <url>/2020/03/13/%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/</url>
+    <content><![CDATA[<h1 id="单源最短路径"><a href="#单源最短路径" class="headerlink" title="单源最短路径"></a>单源最短路径</h1><blockquote>
+<p>阅读《算法导论》里的一些总结，这里抛开了繁杂的理论知识，希望能用通俗易懂的方法来和大家一起讨论算法。</p>
+</blockquote>
+<p>从 中国的 最北方到拉萨 ，我们怎样才是走最短的路程？</p>
+<h2 id="路在何方？"><a href="#路在何方？" class="headerlink" title="路在何方？"></a>路在何方？</h2><p><img src="/2020/03/13/%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/FA72D6DD60D0AC4B719167910536110C.jpg" alt="IMAGE"><br>密密麻麻的高速网络（基建狂魔），怎样选择一条路线是最短的？ 是最快的？ 是最省钱的？</p>
+<a id="more"></a>
+
+<p>如果交通方式加上了飞机、轮船、高铁，又该如何选择呢？<br><img src="C91B3330C4FA4212B5FA51B3A8422A0D.jpg" alt="IMAGE"></p>
+<p>这些问题可以用「单源最短路径」算法来解决，看看算法的魅力</p>
+<h2 id="有向图"><a href="#有向图" class="headerlink" title="有向图"></a>有向图</h2><p><img src="7BF59587DC90E8566A3C674706D514B3.jpg" alt="IMAGE"></p>
+<p>一个简单的抽象，我们将路程选择中的五个地名，换成五个节点，那么不同几点间的权重可以是公里数、路上花费的天数、钱数等等。<br>这样当我们找到一个节点到另一个节点中最短的路径，我们就知道怎么走是最短的、最快的、花钱最少的。</p>
+<h2 id="基础的一些概念"><a href="#基础的一些概念" class="headerlink" title="基础的一些概念"></a>基础的一些概念</h2><p>这里说明一些基础的算法知识，不用特别复杂，我会用通俗的说明下。<br><img src="F9872DE35105F6AC4BDC897A183471F2.jpg" alt="IMAGE"><br>总结来说的意思，就是 G= （5，10） ，表示 这个有向图有5个节点，10条边，当以这5个节点中的一个为起始节点时，到终点节点数字和最小的就是路径就是单源最短路径路径。</p>
+<p>例如：<br><img src="556940E2C3AB2F9A383638040DB57DD8.jpg" alt="IMAGE"><br>红色箭头的就是从起始节点到终止节点的路径，每个节点中的红色数字就是路径长度。</p>
+<p>呐，这里我们必须了解的又一个概念，叫做 <strong>「松弛(relaxation)」</strong></p>
+<h3 id="松弛"><a href="#松弛" class="headerlink" title="松弛"></a>松弛</h3><p>将从节点s到节点u之间的最短路径距离加上节点u与v之间的边权重，与节点s到v的最短路径估计比较，如果如果前者较小，则更新节点s到v的最短路径估计。</p>
+<h4 id="三角不等式"><a href="#三角不等式" class="headerlink" title="三角不等式"></a>三角不等式</h4><p>对于任何边 $(u,v)∈E$ ,有 $w(s,v)&lt;=w(s,u)+w(u,v)$</p>
+<p>文字让人迷惑，上 demo ：<br><img src="C902EBD8C2B05D06E13041C329C7E040.jpg" alt="IMAGE"></p>
+<p>可以这样理解，我们从 A-&gt;B 需要10天时间，但是我们从 A-&gt;C = 5天，从 C-&gt;B = 3天，这样我们就可以认为 从 A-&gt;B = 8天。让自己 Relax 一下喽~</p>
+<h2 id="Bellman-Ford"><a href="#Bellman-Ford" class="headerlink" title="Bellman-Ford"></a>Bellman-Ford</h2><p>ok，理解了一些基础概念，我们看一看算法「Bellman-Ford」是怎么实现的~</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">BELLMAN_FORD(G,w,s)</span><br><span class="line"></span><br><span class="line">INITIALIZE_SINGLE-SOURCE(G,s) &#x2F;&#x2F;初始化</span><br><span class="line">for i&#x3D;1 to |G.V|-1  &#x2F;&#x2F;循环V-1次</span><br><span class="line">    for each edge(u,v)∈G.E &#x2F;&#x2F;对G中的每条边进行RELAX</span><br><span class="line">        RELAX(u,v,w)</span><br><span class="line">    for each edge(u,v)∈G.E  &#x2F;&#x2F;检查途中是否存在权重为负的环</span><br><span class="line">        if v.d&gt;u.d+w(u.v)</span><br><span class="line">            return FALSE</span><br><span class="line">return TRUE</span><br></pre></td></tr></table></figure>
+<p>这里为什么要检测，权重为负的环呢？  因为最短呀，如果有为负的环， 负无穷 $-\infty$ 了解一下~</p>
+<p><img src="FD1CB986C8A44EAB760104D38A3C6CB1.jpg" alt="IMAGE"><br>带入上面的松弛，我们最终得到的是这样的路径：<br><img src="EB1802FD443E164A37E871DE7CDF7214.jpg" alt="IMAGE"></p>
+<p>如果出现了权重为负的环呢？<br><img src="6E56A51C20BA7B4D2414C3254505C128.jpg" alt="IMAGE"></p>
+<p>注意看最后的 <strong>t -&gt; z -&gt; x</strong> 环，一圈的权和为-1 ，意味着我们只要在这个环里无限循环，是不可能找到最小的解的<br><img src="36F8041A9DF402D4143667E247F391E3.jpg" alt="IMAGE"></p>
+<p>总结一下：</p>
+<ul>
+<li>解决 <strong>一般情况下</strong> 的单源最短路径问题<ul>
+<li>边的权重可以为 <strong>负值</strong></li>
+<li>可以 <strong>存在环</strong></li>
+<li>环内 <strong>权重和为负值</strong> 时，无解</li>
+</ul>
+</li>
+<li>每条边进行 <strong>|V|-1</strong> 次松弛</li>
+<li>需要 <strong>检测异常环</strong> 存在</li>
+<li>时间复杂度 <strong>O(VE)</strong></li>
+</ul>
+<h2 id="有向无环图"><a href="#有向无环图" class="headerlink" title="有向无环图"></a>有向无环图</h2><p>这里在说明下 <strong>有向无环图</strong> 中的简单解决方案。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DAG-SHORTEST-PATHS(G,w,s)</span><br><span class="line"></span><br><span class="line">topologyically sort the vertices of G  &#x2F;&#x2F;拓扑排序</span><br><span class="line">INITIALIZE_SINGLE-SOURCE(G,s) &#x2F;&#x2F;初始化</span><br><span class="line">for each vertex u, taken in topologycally sorted order</span><br><span class="line">    for each vertex v∈G.Adj[u]</span><br><span class="line">        RELAX(u,v,w)</span><br></pre></td></tr></table></figure>
+
+<p>拓扑排排序</p>
+<p><img src="05B377552861B7414A88994C2CA32CF6.jpg" alt="IMAGE"></p>
+<p>这里进行一系列的松弛操作（多图警告）：<br><img src="265A5F7C2CAFD084FFF6ECD8A14FFADA.jpg" alt="IMAGE"><br><img src="D3801B009F7FB9CC7F98025A7C10466F.jpg" alt="IMAGE"><br><img src="9ADC2EA92E0DE32E95FA86854B20D114.jpg" alt="IMAGE"><br><img src="ACB59A5304CC3BBE3E3FC3BB2FFF6A89.jpg" alt="IMAGE"><br><img src="3EC71975151C45F0FDDF54B92AFACC3A.jpg" alt="IMAGE"><br><img src="9A64483B6D9C10E4622BC4032AD5EB8F.jpg" alt="IMAGE"><br>红色的线就表示最短路径，可以注意每次 Relax 操作，不同节点上数字的变化，和线条颜色的变化。</p>
+<p>总结一下：</p>
+<ul>
+<li>解决有向无环图的单源最短路径问题<ul>
+<li>边的权重可以为负值</li>
+<li>不可以存在环</li>
+</ul>
+</li>
+<li>对图进行拓扑排序<ul>
+<li>对从处理节点发出的边进行松弛操作</li>
+</ul>
+</li>
+<li>时间复杂度O(V+E)</li>
+</ul>
+<h2 id="Dijkstra"><a href="#Dijkstra" class="headerlink" title="Dijkstra"></a>Dijkstra</h2><p>借助一个最小优先队列，做贪心选择，实现逻辑。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DIJKSTRA(G,w,s)</span><br><span class="line"></span><br><span class="line">INITIALIZE_SINGLE-SOURCE(G,s) &#x2F;&#x2F;初始化</span><br><span class="line">S&#x3D;∅</span><br><span class="line">Q&#x3D;G.V   &#x2F;&#x2F;图中全部节点进入队列</span><br><span class="line">while Q≠∅   &#x2F;&#x2F;最小优先队列不为空</span><br><span class="line">    u&#x3D;EXTRACT-MIN(Q)    &#x2F;&#x2F;每一次选择从队列中 pop 出来</span><br><span class="line">    S&#x3D;S∪&#123;u&#125; &#x2F;&#x2F;全部处理完成后 S &#x3D; G.V</span><br><span class="line">    for each vertex v∈G.Adj[u]</span><br><span class="line">        RELAX(u,v,w)    &#x2F;&#x2F;对每个节点进行 relax</span><br></pre></td></tr></table></figure>
+
+<p>每一次 <code>u=EXTRACT-MIN(Q)</code> 出来的节点，用灰色节点表示，加入 S 的则用黑色节点表示， 在队列中的则用白色节点表示。</p>
+<p><img src="93705C58A4070CDAEC69E8FC32548D75.jpg" alt="IMAGE"><br>这里队列中 pop 出节点 s ，relax 后，队列中的 t、y 节点变为10 、 5 。<br>则队列中存在 {t(10),y(5),x($\infty$),z($\infty$)} ,pop 出的节点为 y。<br><img src="12F9E3E6B40924884EF2F7DE3AA55C7D.jpg" alt="IMAGE"></p>
+<p>同上，节点 y 进入 S ，更改队列中节点的数值。<br>relex 之后，队列中的节点变为{t(8),x(14),z(7)},pop 下一次 pop 出节点 z。</p>
+<p><img src="8EF0E7939130CBDF9FD64A14DD461D6D.jpg" alt="IMAGE"></p>
+<p>同上，节点 z 进入 S ，更改队列中节点的数值。<br>relex 之后，队列中的节点变为{t(8),x(13)},pop 下一次 pop 出节点 z。</p>
+<p><img src="4948815D730674F9F0AF31A3BE2AAA78.jpg" alt="IMAGE"></p>
+<p><img src="1C0834AADBE948F933A13CF6D3CDB397.jpg" alt="IMAGE"></p>
+<p>最终的筛选出来的，s -&gt; z 的路径 是 s-&gt; y -&gt; z，路径长度为 7</p>
+<p>总结一下：</p>
+<ul>
+<li>解决一般情况的单源最短路径问题<ul>
+<li>边的权重不可以为负值</li>
+<li>可以存在环</li>
+</ul>
+</li>
+<li>对图节点插入最小优先队列（排序依据：V-S集合的最短路径估计）<ul>
+<li>贪心算法</li>
+<li>对从pop出的最小节点发出的边进行松弛操作</li>
+</ul>
+</li>
+<li>时间复杂度依赖最小优先队列的实现<ul>
+<li>hash ： $O(V²+E) = O(V²)$</li>
+<li>二叉堆：稀疏图情况, $O((V+E)lgV)$ ,都可从源点到达 $O(ElgV)$</li>
+<li>斐波那契堆： $O(VlgV+E)$</li>
+</ul>
+</li>
+</ul>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>后续会整理一些真正的代码实现出来吧  等更新吧</p>
+<!-- markdownlint-disable MD041 MD002--> # 防止 markdownlint 报错
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法导论</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>常用的 linux 命令</title>
     <url>/2020/03/11/%E5%B8%B8%E7%94%A8%E7%9A%84-linux-%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h2><p>创建一个新的tar文件</p>
